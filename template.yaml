@@ -16,6 +16,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
+      Cors:
+        AllowOrigin: "*"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
       Auth:
         DefaultAuthorizer: AccountingAuthorizer
         Authorizers:
@@ -28,6 +32,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: sanford
+      Cors:
+        AllowOrigin: "*"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
       Auth:
         DefaultAuthorizer: SanfordAuthorizer
         Authorizers:
@@ -61,6 +69,7 @@ Resources:
             {
               Path: /accounting_laser,
               Method: get,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -76,6 +85,7 @@ Resources:
             {
               Path: /particular_class_fee_all_data,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -91,6 +101,7 @@ Resources:
             {
               Path: /erp_get_previous_year_fee,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -106,6 +117,7 @@ Resources:
             {
               Path: /accounting_review_all_data,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -121,6 +133,7 @@ Resources:
             {
               Path: /accounting_income_all_data_by_paymenttype,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -136,6 +149,7 @@ Resources:
             {
               Path: /income_collection_all_data,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -151,6 +165,7 @@ Resources:
             {
               Path: /sanford_accounting_offline_payment,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -166,6 +181,7 @@ Resources:
             {
               Path: /sanford_accounting_student_get_multiple_month_fee,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -181,6 +197,7 @@ Resources:
             {
               Path: /sanford_accounting_monthly_unpaid_fee_record,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -196,6 +213,7 @@ Resources:
             {
               Path: /sanford_accounting_all_data_by_paymenttype,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -211,6 +229,7 @@ Resources:
             {
               Path: /sanford_accounting_students_unpaid_month,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -226,6 +245,7 @@ Resources:
             {
               Path: /bus_fee_details_all_data,
               Method: get,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -241,6 +261,7 @@ Resources:
             {
               Path: /edit_particular_class_fee,
               Method: put,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -256,6 +277,7 @@ Resources:
             {
               Path: /acconting_review,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -271,6 +293,7 @@ Resources:
             {
               Path: /sanford_accounting_filter_search,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -286,6 +309,7 @@ Resources:
             {
               Path: /income_expanses_all_data,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -301,6 +325,7 @@ Resources:
             {
               Path: /sanford_accounting_ledger_by_month_year,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -316,6 +341,7 @@ Resources:
             {
               Path: /acconting_review_delete,
               Method: delete,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -331,6 +357,7 @@ Resources:
             {
               Path: /sanford_accounting_login,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -346,6 +373,7 @@ Resources:
             {
               Path: /accounting_review_back,
               Method: put,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -361,6 +389,7 @@ Resources:
             {
               Path: /sanford_accounting_bus_fee_update,
               Method: put,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -376,6 +405,7 @@ Resources:
             {
               Path: /income_expanses,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -391,6 +421,7 @@ Resources:
             {
               Path: /accounting_expanse_all_data_by_paymenttype,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -406,6 +437,7 @@ Resources:
             {
               Path: /sanford_accounting_quarterly_all_data,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -421,6 +453,7 @@ Resources:
             {
               Path: /update_class_fee,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -436,6 +469,7 @@ Resources:
             {
               Path: /accounting_search,
               Method: get,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -451,6 +485,7 @@ Resources:
             {
               Path: /income_collection,
               Method: post,
+
               RestApiId: !Ref AccountingApi,
               Auth: { Authorizer: AccountingAuthorizer },
             }
@@ -467,6 +502,7 @@ Resources:
             {
               Path: /sanford_prospectus_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -482,6 +518,7 @@ Resources:
             {
               Path: /sanford_videos_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -497,6 +534,7 @@ Resources:
             {
               Path: /sanford_contact_us_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -512,6 +550,7 @@ Resources:
             {
               Path: /sanford_enquiry,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -527,6 +566,7 @@ Resources:
             {
               Path: /sanford_admission_enquiry_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -542,6 +582,7 @@ Resources:
             {
               Path: /sanford_carrier_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -557,6 +598,7 @@ Resources:
             {
               Path: /sanford_admission_form_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -572,6 +614,7 @@ Resources:
             {
               Path: /sanford_gallery_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -587,6 +630,7 @@ Resources:
             {
               Path: /sanford_facility_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -602,6 +646,7 @@ Resources:
             {
               Path: /sanford_billing_all_data,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -627,6 +672,7 @@ Resources:
             {
               Path: /sanford_notice,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -642,6 +688,7 @@ Resources:
             {
               Path: /sanford_circular_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -657,6 +704,7 @@ Resources:
             {
               Path: /sanford_campus_liife,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -672,6 +720,7 @@ Resources:
             {
               Path: /sanford_facility_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -687,6 +736,7 @@ Resources:
             {
               Path: /sanford_notice_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -712,6 +762,7 @@ Resources:
             {
               Path: /sanford_contact_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -727,6 +778,7 @@ Resources:
             {
               Path: /sanford_videos_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -742,6 +794,7 @@ Resources:
             {
               Path: /sanford_delete_gallery_image,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -757,6 +810,7 @@ Resources:
             {
               Path: /sanford_enquiry_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -772,6 +826,7 @@ Resources:
             {
               Path: /sanford_poster_image_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -787,6 +842,7 @@ Resources:
             {
               Path: /sanford_app_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -802,6 +858,7 @@ Resources:
             {
               Path: /sanford_admission_enquiry,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -817,6 +874,7 @@ Resources:
             {
               Path: /sanford_app_url_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -832,6 +890,7 @@ Resources:
             {
               Path: /sanford_principal_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -847,6 +906,7 @@ Resources:
             {
               Path: /sanford_delete_carrier,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -862,6 +922,7 @@ Resources:
             {
               Path: /sanford_news_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -877,6 +938,7 @@ Resources:
             {
               Path: /sanford_presigned,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -892,6 +954,7 @@ Resources:
             {
               Path: /sanford_campus_life_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -907,6 +970,7 @@ Resources:
             {
               Path: /sanford_enquiry_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -922,6 +986,7 @@ Resources:
             {
               Path: /sanford_team_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -937,6 +1002,7 @@ Resources:
             {
               Path: /sanford_principal_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -952,6 +1018,7 @@ Resources:
             {
               Path: /sanford_admission_enquiry_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -967,6 +1034,7 @@ Resources:
             {
               Path: /sanford_contact_us,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -982,6 +1050,7 @@ Resources:
             {
               Path: /sanford_news_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -997,6 +1066,7 @@ Resources:
             {
               Path: /sanford_events_status_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1012,6 +1082,7 @@ Resources:
             {
               Path: /sanford_gallery_presigned,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1027,6 +1098,7 @@ Resources:
             {
               Path: /sanford_facility,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1042,6 +1114,7 @@ Resources:
             {
               Path: /sanford_admission_form_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1057,6 +1130,7 @@ Resources:
             {
               Path: /sanford_videos,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1072,6 +1146,7 @@ Resources:
             {
               Path: /sanford_class_fee_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1087,6 +1162,7 @@ Resources:
             {
               Path: /sanford_contact_us_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1102,6 +1178,7 @@ Resources:
             {
               Path: /sanford_delete_notice,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1117,6 +1194,7 @@ Resources:
             {
               Path: /sanford_prospectus_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1132,6 +1210,7 @@ Resources:
             {
               Path: /sanford_bus_fee_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1147,6 +1226,7 @@ Resources:
             {
               Path: /sanford_carrier,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1162,6 +1242,7 @@ Resources:
             {
               Path: /sanford_contact_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1177,6 +1258,7 @@ Resources:
             {
               Path: /sanford_circular,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1192,6 +1274,7 @@ Resources:
             {
               Path: /sanford_class_fee_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1207,6 +1290,7 @@ Resources:
             {
               Path: /sanford_events_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1222,6 +1306,7 @@ Resources:
             {
               Path: /sanford_syallabus_update,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1237,6 +1322,7 @@ Resources:
             {
               Path: /sanford_create_events,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1252,6 +1338,7 @@ Resources:
             {
               Path: /sanford_events_all_data,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1267,6 +1354,7 @@ Resources:
             {
               Path: /sanford_login,
               Method: post,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1282,6 +1370,7 @@ Resources:
             {
               Path: /sanford_team_delete,
               Method: delete,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1297,6 +1386,7 @@ Resources:
             {
               Path: /sanford_syallabus_all_data,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1312,6 +1402,7 @@ Resources:
             {
               Path: /sanford_bus_fee_details,
               Method: put,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
@@ -1327,6 +1418,7 @@ Resources:
             {
               Path: /sanford_poster_image,
               Method: get,
+
               RestApiId: !Ref DavSanfordApi,
               Auth: { Authorizer: SanfordAuthorizer },
             }
