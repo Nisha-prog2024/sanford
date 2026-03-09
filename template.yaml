@@ -52,13 +52,13 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: accounting_authorizer
-      CodeUri: ./src/auth_acc/
+      CodeUri: ./src
 
   SanfordAuthFn:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: sanford_authorizer
-      CodeUri: ./src/auth_san/
+      CodeUri: ./src
 
   # --- 1. Accounting API Functions (Example 20+ total) ---
   AccLaserFn:
