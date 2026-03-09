@@ -1,0 +1,1343 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Simplified SAM template for Sanford and Accounting APIs.
+
+Globals:
+  Function:
+    Runtime: nodejs24.x
+    MemorySize: 128
+    Timeout: 10
+    Architectures: [x86_64]
+    Handler: index.handler
+
+Resources:
+  # --- API Definitions ---
+  AccountingApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            { Location: ./sanford_accounting-prod-oas30-apigateway.yaml }
+
+      Auth:
+        DefaultAuthorizer: AccountingAuthorizer
+        Authorizers:
+          AccountingAuthorizer:
+            FunctionArn: !GetAtt AccountingAuthFn.Arn
+            Identity:
+              ReauthorizeEvery: 0
+
+  DavSanfordApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: sanford
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters: { Location: ./dav_sanford-sanford-oas30-apigateway.yaml }
+
+      Auth:
+        DefaultAuthorizer: SanfordAuthorizer
+        Authorizers:
+          SanfordAuthorizer:
+            FunctionArn: !GetAtt SanfordAuthFn.Arn
+            Identity:
+              ReauthorizeEvery: 0
+
+  # --- Authorizers ---
+  AccountingAuthFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: accounting_authorizer
+      CodeUri: ./src/auth_acc/
+
+  SanfordAuthFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_authorizer
+      CodeUri: ./src/auth_san/
+
+  # --- 1. Accounting API Functions (Example 20+ total) ---
+  AccLaserFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_laser
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_laser,
+              Method: get,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccParticularClassFeeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_particular_class_fee_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /particular_class_fee_all_data,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccPrevYearFeeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_get_previous_year_fee
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /erp_get_previous_year_fee,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccReviewAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_review_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_review_all_data,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccIncomePaymentTypeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_income_all_data_by_paymentType
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_income_all_data_by_paymenttype,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccIncomeCollAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_income_collection_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /income_collection_all_data,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccOfflinePaymentFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_offline_payment
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_offline_payment,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccStudentMultiMonthFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_student_get_multiple_month_fee
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_student_get_multiple_month_fee,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccUnpaidFeeRecordFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_monthly_unpaid_fee_record
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_monthly_unpaid_fee_record,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccAllDataPaymentTypeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_all_data_by_PaymentType
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_all_data_by_paymenttype,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccStudentUnpaidMonthFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_students_unpaid_month
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_students_unpaid_month,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccBusFeeAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_bus_fee_details_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /bus_fee_details_all_data,
+              Method: get,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccEditClassFeeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_edit_students_fee
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /edit_particular_class_fee,
+              Method: put,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccReviewFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_review
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /acconting_review,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccFilterSearchFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accouunting_filter
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_filter_search,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccExpanseAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_expanses_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /income_expanses_all_data,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccLedgerMonthYearFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_ledger_by_month_year
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_ledger_by_month_year,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccReviewDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_review_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /acconting_review_delete,
+              Method: delete,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccLoginFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_login
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_login,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccReviewBackFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_review_back
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_review_back,
+              Method: put,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccBusFeeUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_bus_fee_details
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_bus_fee_update,
+              Method: put,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccExpensesFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_expenses
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /income_expanses,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccExpansePaymentTypeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_expanse_all_data_by_paymentType
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_expanse_all_data_by_paymenttype,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccQuarterlyAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_quarterly_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_accounting_quarterly_all_data,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccUpdateClassFeeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: erp_update_students_fee
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /update_class_fee,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccSearchFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_search
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /accounting_search,
+              Method: get,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  AccIncomeCollFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_accounting_income_collection
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /income_collection,
+              Method: post,
+              RestApiId: !Ref AccountingApi,
+              Auth: { Authorizer: AccountingAuthorizer },
+            }
+
+  # --- 2. DAV Sanford API Functions (Remaining 58+ functions) ---
+  DavProspectusAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_prospectus_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_prospectus_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavVideosAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_videos_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_videos_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavContactDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_contact_us_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_contact_us_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEnquiryFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_enquiry
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_enquiry,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAdmissionEnquiryAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_admission_enquiry_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_admission_enquiry_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCarrierAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_carrier_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_carrier_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAdmissionFormUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_admission_form_update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_admission_form_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavGalleryAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_gallery_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_gallery_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavFacilityAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_facility_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_facility_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavBillingAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_billing_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_billing_all_data,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavTeamFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_meet_of_team
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            { Path: /sanford_team, Method: post, RestApiId: !Ref DavSanfordApi }
+
+  DavNoticeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_notice
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_notice,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCircularAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_circular_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_circular_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCampusLifeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_campus_life
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_campus_liife,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavFacilityDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_facility_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_facility_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavNoticeAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_notice_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_notice_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavNewsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_news
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            { Path: /sanford_news, Method: post, RestApiId: !Ref DavSanfordApi }
+
+  DavContactAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_contact_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_contact_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavVideosDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_video_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_videos_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavGalleryImageDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_gallery_image_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_delete_gallery_image,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEnquiryAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_enquiry_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_enquiry_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavPosterDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_poster_image_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_poster_image_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAppAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_app_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_app_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAdmissionEnquiryFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_admission_enquiry
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_admission_enquiry,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAppUrlUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_app_link_update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_app_url_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavPrincipalAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_principal_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_principal_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCarrierDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_carrier_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_delete_carrier,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavNewsAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_news_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_news_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavPresignedFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_presigned
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_presigned,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCampusLifeAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_campus_life_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_campus_life_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEnquiryDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_enquiry_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_enquiry_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavTeamAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_team_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_team_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavPrincipalUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_principal_update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_principal_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAdmEnquiryDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_admission_enquiry_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_admission_enquiry_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavContactUsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_contact_us
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_contact_us,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavNewsDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_news_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_news_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEventStatusUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_events_status_update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_events_status_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavGalleryPresignedFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_gallery
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_gallery_presigned,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavFacilityFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_facility
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_facility,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavAdmissionFormAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_admission_form_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_admission_form_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavVideosFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_videos
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_videos,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavClassFeeAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_classs_fee_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_class_fee_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavContactUsAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_contact_us_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_contact_us_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavDeleteNoticeFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_notice_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_delete_notice,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavProspectusUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_prospectus_update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_prospectus_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavBusFeeAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_bus_fee_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_bus_fee_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCarrierFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_carrier
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_carrier,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavContactUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_contact
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_contact_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCircularFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_circular
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_circular,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavClassFeeUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_class_fee_details
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_class_fee_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEventsDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_events_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_events_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavSyllabusUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_syallabus
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_syallabus_update,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavCreateEventsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_create_event
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_create_events,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavEventsAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_events_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_events_all_data,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavLoginFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_login
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_login,
+              Method: post,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavTeamDeleteFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_team_delete
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_team_delete,
+              Method: delete,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavSyllabusAllFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_syallabus_all_data
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_syallabus_all_data,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavBusFeeDetailsUpdateFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_bus_fee_details
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_bus_fee_details,
+              Method: put,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }
+
+  DavPosterImageFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: sanford_poster_image
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            {
+              Path: /sanford_poster_image,
+              Method: get,
+              RestApiId: !Ref DavSanfordApi,
+              Auth: { Authorizer: SanfordAuthorizer },
+            }

@@ -1,0 +1,33 @@
+```
+name: SAM Deploy
+on:
+  push:
+    branches: [main] # Runs when you push to main
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # Required to checkout code
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SAM
+        uses: aws-actions/setup-sam@v2
+        with:
+          use-installer: true
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::825982958571:role/pipeline # Replace with your Role ARN
+          aws-region: ap-south-1 # Replace with your region
+
+      - name: Build and Deploy
+        run: |
+          sam build
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+
+```
