@@ -1,4 +1,4 @@
-```
+
 name: SAM Deploy
 on:
   push:
@@ -30,4 +30,3 @@ jobs:
           sam build
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
 
-```
