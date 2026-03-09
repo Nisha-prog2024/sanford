@@ -16,12 +16,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            { Location: ./sanford_accounting-prod-oas30-apigateway.yaml }
-
       Auth:
         DefaultAuthorizer: AccountingAuthorizer
         Authorizers:
@@ -34,11 +28,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: sanford
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters: { Location: ./dav_sanford-sanford-oas30-apigateway.yaml }
-
       Auth:
         DefaultAuthorizer: SanfordAuthorizer
         Authorizers:
